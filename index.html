@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Продажи ЖК</title>
+<meta name="description" content="Исследовательский дашборд продаж ЖК, март–сентябрь 2026: шахматка сделок, темп по неделям, деньги и скидки, менеджеры.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="head">
+    <div class="head-text">
+      <h1>Продано две трети квартир. Виды на реку и в сад разобрали, в продаже остались окна во двор и на улицу</h1>
+      <p class="sub">248 сделок из 367 квартир, со 2 марта по 30 сентября 2026 года. Клик по любому элементу фильтрует остальные графики.</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">◐</button>
+  </header>
+
+  <div class="filters" id="filters" aria-live="polite"></div>
+
+  <section class="kpis" id="kpis" aria-label="Ключевые показатели"></section>
+
+  <main class="grid">
+    <section class="card main-card">
+      <div class="card-head">
+        <h2>Шахматка продаж</h2>
+        <p>Клетка на фасаде обозначает квартиру. Закрашенная клетка означает сделку, пустая значит, что квартира ещё в продаже. Чем темнее клетка, тем быстрее закрыли сделку.</p>
+      </div>
+      <div class="scroll-x"><div id="main" class="chart"></div></div>
+      <div class="legend" id="mainLegend"></div>
+    </section>
+
+    <aside class="side">
+      <section class="card">
+        <div class="card-head">
+          <h2>Сделок по-прежнему около восьми в неделю, но с августа средний чек упал со 110 до 75 млн ₽</h2>
+          <p>Квадрат = сделка, горизонтальная линия = средний темп. Под месяцем подписан средний чек. Клик по неделе оставляет только её сделки.</p>
+        </div>
+        <div id="weeks" class="chart"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Выручка 25,3 млрд ₽. Скидки обошлись в 258 млн ₽, это около 1% от прайса</h2>
+          <p>По месяцам сделки. Шкалы разные: скидки в сто раз меньше выручки.</p>
+        </div>
+        <div id="money" class="chart"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Тимур закрывает сделку в среднем за 6 дней и почти без скидок. Виктор продаёт больше всех, но на нём две трети всех скидок</h2>
+          <p>Квадрат = сделка, оранжевый уголок = скидка. Клик по менеджеру фильтрует дашборд.</p>
+        </div>
+        <div id="managers" class="chart"></div>
+      </section>
+    </aside>
+  </main>
+
+  <details class="card table-view">
+    <summary>Те же данные таблицей</summary>
+    <div id="tables"></div>
+  </details>
+
+  <footer class="foot">
+    <p><b>Как устроен дашборд.</b> Визуальный атом здесь сделка. Основной график собран из фасадов корпусов: по вертикали этаж, по горизонтали квартиры в порядке номеров, ширина клетки пропорциональна площади. Справа те же сделки разложены по неделям, месяцам и менеджерам.</p>
+    <p>Данные: <a href="data/zhk_sales_2026.csv">zhk_sales_2026.csv</a> (367 квартир, лист «full»). Недели начинаются с понедельника; последняя неделя неполная, данные до 30 сентября. Срок сделки считаем в днях от обращения до сделки.</p>
+    <p>Проект курса «Визуализация», вариант 1. Владислав Иванов, 2026.</p>
+  </footer>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
