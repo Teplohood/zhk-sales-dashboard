@@ -180,6 +180,21 @@
     renderAll();
   }
 
+  // фильтры живут в адресе страницы: ссылкой можно поделиться конкретным срезом
+  function readHash() {
+    const params = new URLSearchParams(location.hash.slice(1));
+    Object.keys(filters).forEach((k) => {
+      const v = params.get(k);
+      filters[k] = v !== null && VALUE_LABELS[k][v] !== undefined ? v : null;
+    });
+  }
+  function writeHash() {
+    const params = new URLSearchParams();
+    Object.keys(filters).forEach((k) => { if (filters[k] !== null) params.set(k, filters[k]); });
+    const hash = params.toString();
+    try { history.replaceState(null, '', hash ? '#' + hash : location.pathname + location.search); } catch (e) { /* file:// */ }
+  }
+
   // ---------- Цвет ----------
   const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   let C = {};
@@ -664,6 +679,7 @@
   // ---------- Сборка ----------
   function renderAll() {
     hideTip();
+    writeHash();
     readColors();
     renderFilters();
     renderKPIs();
@@ -694,6 +710,24 @@
     if (e.key === 'Escape') { Object.keys(filters).forEach((k) => (filters[k] = null)); renderAll(); }
   });
 
+  window.addEventListener('hashchange', () => { readHash(); renderAll(); });
+
+  readHash();
   renderTables();
   renderAll();
+
+  // служебный режим для скриншотов: ?rects выводит координаты карточек
+  if (new URLSearchParams(location.search).has('rects')) {
+    const out = {};
+    document.querySelectorAll('.kpis, .card, .head').forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      out[(el.id || el.querySelector('.chart') && el.querySelector('.chart').id || el.className.split(' ')[0]) + '_' + i] =
+        [Math.round(r.left + scrollX), Math.round(r.top + scrollY), Math.round(r.width), Math.round(r.height)];
+    });
+    const pre = document.createElement('pre');
+    pre.id = 'rects';
+    pre.textContent = JSON.stringify(out);
+    pre.hidden = true;
+    document.body.appendChild(pre);
+  }
 })();
